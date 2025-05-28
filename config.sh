@@ -141,9 +141,9 @@ configure_xrdp() {
   echo "[+] Enabled systemctl xrdp"
   systemctl enable xrdp
 
-  echo "[+] Creating .xsession file for user '${USERNAME} '..."
-  echo gnome-session | tee /home/${USERNAME} /.xsession
-  chown ${USERNAME}:${USERNAME}  /home/${USERNAME} /.xsession
+  echo "[+] Creating .xsession file for user '${USERNAME}'..."
+  echo gnome-session | tee /home/${USERNAME}/.xsession
+  chown ${USERNAME}:${USERNAME}  /home/${USERNAME}/.xsession
 
   echo "[+] Creating /etc/xrdp/startwm.sh..."
 cat <<EOF > /etc/xrdp/startwm.sh
@@ -171,8 +171,8 @@ configure_gnome() {
   systemctl set-default multi-user.target
 
   echo "[+] Configuring GNOME settings for user '${USERNAME}'..."
-  su - ${USERNAME}  -c "gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type nothing"
-  su - ${USERNAME}  -c "gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type nothing"
+  su - ${USERNAME} -c "gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type nothing"
+  su - ${USERNAME} -c "gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type nothing"
   echo "[+] GNOME settings configured successfully."
 }
 
