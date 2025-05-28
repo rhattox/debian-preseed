@@ -213,13 +213,13 @@ EOF
 }
 
 main() {
-  configure_fail2ban
-  configure_ssh
-  configure_nginx
-  configure_sudoers
-  configure_xrdp
   configure_gnome
   configure_network_interfaces
+  configure_xrdp
+  configure_sudoers
+  configure_nginx
+  configure_ssh
+  configure_fail2ban
 }
 
 
