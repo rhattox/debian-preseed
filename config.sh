@@ -2,7 +2,7 @@
 set -xeu
 
 IPV6_RANGE_1="2804:32b0:1000:20::/64"
-# IPV6_RANGE_2="2804:32b0:1000:20::/64"
+IPV6_RANGE_2="2804:d41:ecdc:3c00::/64"
 # IPV6_RANGE_3="2804:32b0:1000:20::/64"
 IPV4_RANGE="192.168.10.0/24"
 USERNAME="dev"
@@ -91,7 +91,12 @@ configure_ssh() {
     echo "[+] Allow port 3389 UFW..."
     ufw allow from "$IPV6_RANGE_1" to any port 3389 proto tcp
     ufw allow from "$IPV4_RANGE" to any port 3389 proto tcp
+
+    echo "[+] Allowing SSH from specific IPv6 range 2..."
+    ufw allow from "$IPV6_RANGE_2" to any port 3389 proto tcp
     
+    # echo "[+] Allowing SSH from specific IPv6 range 3..."
+    # ufw allow from "$IPV6_RANGE_3" to any port 3389 proto tcp
     
     echo "[+] Allowing SSH from specific IPv4 range..."
     ufw allow from "$IPV4_RANGE" to any port 22 proto tcp
@@ -99,19 +104,14 @@ configure_ssh() {
     echo "[+] Allowing SSH from specific IPv6 range 1..."
     ufw allow from "$IPV6_RANGE_1" to any port 22 proto tcp
     
-    # echo "[+] Allowing SSH from specific IPv6 range 2..."
-    # ufw allow from "$IPV6_RANGE_2" to any port 22 proto tcp
+    echo "[+] Allowing SSH from specific IPv6 range 2..."
+    ufw allow from "$IPV6_RANGE_2" to any port 22 proto tcp
     
     # echo "[+] Allowing SSH from specific IPv6 range 3..."
     # ufw allow from "$IPV6_RANGE_3" to any port 22 proto tcp
     
     echo "[+] Denying all other SSH access..."
     ufw deny in to any port 22 proto tcp
-    
-    
-    
-    echo "[+] Done! UFW status:"
-    ufw status verbose
     
     echo "[+] Enabled systemctl nginx"
     systemctl enable nginx
@@ -122,8 +122,12 @@ configure_ssh() {
     echo "[+] Allowing HTTPS (port 443) from any address..."
     ufw allow 443/tcp
     
+    echo "[+] Done! UFW status:"
+    ufw status verbose
+    
+    
     echo "[+] Enabling UFW..."
-    ufw --force enable
+    ufw --force enable    
 }
 
 
@@ -221,3 +225,7 @@ main() {
 
 
 main
+
+timeshift --create --comments "Initial Backup" --tags D
+#timeshift --list
+#timeshift --restore
