@@ -154,7 +154,7 @@ EOF
   chmod +x /etc/xrdp/startwm.sh
 
   echo "[+] Allow port 3389 UFW..."
-  ufw allow from "$IPV6_RANGE" to any port 3389 proto tcp
+  ufw allow from "$IPV6_RANGE_1" to any port 3389 proto tcp
   ufw allow from "$IPV4_RANGE" to any port 3389 proto tcp
 
   echo "[+] XRDP configured successfully."
