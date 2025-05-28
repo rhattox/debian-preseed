@@ -78,6 +78,9 @@ configure_ssh() {
     echo "[+] Enabled systemctl ufw"
     systemctl enable ufw
 
+    apt update -y
+    apt install iptables -y
+
     echo "[+] Enableling UFW ..."
     ufw enable
     echo "[+] Resetting UFW to start clean..."
