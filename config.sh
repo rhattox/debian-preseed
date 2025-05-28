@@ -1,4 +1,5 @@
 #!/bin/sh
+set -xeu
 
 IPV6_RANGE_1="2804:32b0:1000:20::/64"
 # IPV6_RANGE_2="2804:32b0:1000:20::/64"
@@ -6,7 +7,7 @@ IPV6_RANGE_1="2804:32b0:1000:20::/64"
 IPV4_RANGE="192.168.10.0/24"
 USERNAME="dev"
 
-function configure_fail2ban {
+configure_fail2ban() {
   
   systemctl enable fail2ban
 
@@ -70,7 +71,7 @@ EOF
 
 
 
-function configure_ssh {
+configure_ssh() {
     echo "[+] Enabled systemctl ssh"
     systemctl enable ssh
 
@@ -109,7 +110,7 @@ function configure_ssh {
 }
 
 
-function configure_nginx {
+configure_nginx() {
   echo "[+] Enabled systemctl nginx"
   systemctl enable nginx
 
@@ -121,7 +122,7 @@ function configure_nginx {
 }
 
 
-function configure_sudoers {
+configure_sudoers() {
     echo "[+] Configuring sudoers file..."
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USERNAME} 
     chmod 0440 /etc/sudoers.d/${USERNAME} 
@@ -131,7 +132,7 @@ function configure_sudoers {
 #
 # RDP Configuration
 #
-function configure_xrdp {
+configure_xrdp() {
   echo "[+] Configuring XRDP..."
 
   echo "[+] Enabled systemctl xrdp"
@@ -159,7 +160,7 @@ EOF
 #
 # GNOME Configuration
 #
-function configure_gnome {
+configure_gnome() {
   echo "[+] Disabled gdm"
   systemctl disable gdm
 
@@ -175,7 +176,7 @@ function configure_gnome {
 #
 # Network Interfaces Configuration
 #
-function configure_network_interfaces {
+configure_network_interfaces() {
 #
 # Configure Network Interfaces
 #
@@ -208,7 +209,7 @@ EOF
 
 }
 
-function main {
+main() {
   configure_fail2ban
   configure_ssh
   configure_nginx
