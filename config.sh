@@ -222,6 +222,11 @@ configure_hostname(){
     hostnamectl set-hostname "rhattox.ddns.net"
 }
 
+configure_home_folder(){
+    rm -rf /home/dev/Desktop /home/dev/Documents /home/dev/Downloads /home/dev/Music /home/dev/Pictures /home/dev/Public /home/dev/Templates /home/dev/Videos 
+    mkdir -p /home/dev/git
+}
+
 main() {
     configure_public_key
     configure_hostname
