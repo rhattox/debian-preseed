@@ -216,11 +216,15 @@ EOF
 
 configure_public_key() {
     echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDY8L7fmkb0fiyQc4CWZ0Oa6Clbvtp401ex0GUaepV/EifZeccx6rg33V5AWOrP3hEg/2ViWX8lP10QbsKxPXSUNm6E2EJbJ/aVRSPCKJdVkbwrBGu+ZMxHsEL8Szxogle1v/mCRI471PYLT6Y2991RWfz/Q/Od+Z+jY67w/Hw3Qxr9ApsTrT64GPFKbWeKTH11q9XFcsNvM9pX54wAdldsBRl92nhbTECh7h3sSxre0ejNB+JtfGij1MfHLV76GN9EPfRc6L7T3eIWg5LyWGkuCJwq80JpbCnPgNZGyspSV+L//DmFzk8WbfwUiqfsVswbQdmo3s+zYlxo9npv+U/kMNRNCT3sle9KrkcQfQtqOQnt5nFDmAsKLOX5fmbXdKRKNBob0vg7/VvgTyzbZ1uQ7J9iPWdR0oW/8lNOaG82GoWjO7GmkVlg9kpTfn1BqUzEcRHpPe5t20gd/hvqrWRL5Po3CYeQcAr6K24YuZR53Z3jMwidM6K3xNRXPa2p7zM= dev@debian" > ~/.ssh/authorized_keys
+}
 
+configure_hostname(){
+    hostnamectl set-hostname "rhattox.ddns.net"
 }
 
 main() {
     configure_public_key
+    configure_hostname
     configure_gnome
     configure_network_interfaces
     configure_xrdp
