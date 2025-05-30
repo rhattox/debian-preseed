@@ -224,13 +224,15 @@ configure_public_key() {
     echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDYRil5DvoVS6E3A3YJou8Ifz4fIsHZWjn3I47CA5ECYHf2txCnuscJM+zcLeHAuQZSnCSmwUn5xKfJoaXsAEsukogUcNEldG4B4zq9w2/ZPOtO+gbkwGBD9dUyzXGgm1f6Fu7Ah5oGruCtGU21QVcxLWaBNxLXrJSrfuAZgGWkrZcOIuA/tCH3n1ZBkTdvDXxh0vnRSWk+31jZGfL6mY9GmNuBIEk7btHNI2OG+t9WKQ5iIt13w3eG+AgKWng4pb/tLIa3+0vyo4lCDgQW96z9zGaaZxR6Y5z27dF5hrqyGzIAnF7HYfZGFhFWOfDCdfmiWLGcfACxIQYwo1SLimQ3WS46WbVAoKZKEeqJq4/srVR2kSEDDpCrXBxgX565vHoyMd2ES6KlPoo4tXzDTatD/XYoOMfgAaP+ASupXUHZXhTPi5ICDHExHL5BYzLYrAqpZA5dwE3gLIPNKq75RI4P+zNZ5D4t0tkao/v2Zqdlra4U3enOuDYrf0wcvBPS3hE= notebook-wsl" >> /home/dev/.ssh/authorized_keys
     echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC0SQaElZ1C123iSZEO6PpcmNFsSlRpTYSbfMDHsOn5ys+IWV43Sr/p9/qhWmouAM6qwGBsociZmVrceuByG94wt2nGjtCgo67IzZKwefzzy04XKoYdJrIBUeHh/P2CNSiwJH+a2H9p2V0m4CjfcTB9DtZFk5eV+9cpHrFRLpY8jK4tDRujLNxIfRGa+CzaiEIdtvoHKV6T+qlnQlPDx1H7sMvL3Ju0AJFLqXvq/fWp8DjwyZk6HlZTN7xGIol1I4o0iznSUr1HPNZP6Yez56BP7gi+X+1yCuKz7nF3ANGDgqaxuo83mXn1UOw2mibkOFvWUr+4rjaD+V1vmmKm3Hjc/v8ApWRUQz617ZTZxGpwkG4sVn0GI2bNIh3MEtLY0Dp1P4+lLteFrebzX2GR65LPT+oHL2HoLTK8Nr092lYcai7uE9san7+MxXpxI80RNTEGtSstCoNPZS20QQvhQDbsC7m1sdT4ASR5vRq2FsGjR7+5CM1c6zjcmd846L7RLHM= notebook-windows" >> /home/dev/.ssh/authorized_keys
 
-    chown dev:dev /home/dev/.ssh/authorized_keys
+    chown -R dev:dev /home/dev/.ssh
+    
 }
 
 
 configure_home_folder(){
     rm -rf /home/dev/Desktop /home/dev/Documents /home/dev/Downloads /home/dev/Music /home/dev/Pictures /home/dev/Public /home/dev/Templates /home/dev/Videos 
     mkdir -p /home/dev/git
+    chown dev:dev /home/dev
 }
 
 main() {
