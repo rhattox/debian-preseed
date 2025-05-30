@@ -69,6 +69,97 @@ EOF
     
 }
 
+configure_ip_k8s() {
+BEFORE_RULES="/etc/ufw/before.rules"
+DEFAULT_UFW="/etc/default/ufw"
+BACKUP_BEFORE="${BEFORE_RULES}.bak.$(date +%F_%T)"
+BACKUP_DEFAULT="${DEFAULT_UFW}.bak.$(date +%F_%T)"
+
+echo "Backing up $BEFORE_RULES to $BACKUP_BEFORE"
+sudo cp "$BEFORE_RULES" "$BACKUP_BEFORE"
+
+RAW_BLOCK=$(cat <<'EOF'
+# Allow Kubernetes internal interfaces: cni0, flannel.1
+*raw
+:PREROUTING ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A PREROUTING -i cni0 -j ACCEPT
+-A PREROUTING -i flannel.1 -j ACCEPT
+-A OUTPUT -o cni0 -j ACCEPT
+-A OUTPUT -o flannel.1 -j ACCEPT
+COMMIT
+EOF
+)
+
+FILTER_BLOCK=$(cat <<'EOF'
+# Allow traffic on internal interfaces
+-A ufw-before-input -i cni0 -j ACCEPT
+-A ufw-before-input -i flannel.1 -j ACCEPT
+-A ufw-before-output -o cni0 -j ACCEPT
+-A ufw-before-output -o flannel.1 -j ACCEPT
+EOF
+)
+
+# Modify before.rules
+if ! grep -q "Allow Kubernetes internal interfaces: cni0, flannel.1" "$BEFORE_RULES"; then
+    echo "Inserting raw rules block before *filter section"
+    sudo sed -i "/^\*filter/i $RAW_BLOCK\n" "$BEFORE_RULES"
+else
+    echo "Raw block already present, skipping insertion."
+fi
+
+if ! grep -q "Allow traffic on internal interfaces" "$BEFORE_RULES"; then
+    echo "Appending filter rules block at the end of *filter section"
+    sudo sed -i "/^\*filter/,/COMMIT/{
+        /COMMIT/i $FILTER_BLOCK
+    }" "$BEFORE_RULES"
+else
+    echo "Filter block already present, skipping insertion."
+fi
+
+# Backup and modify /etc/default/ufw
+echo "Backing up $DEFAULT_UFW to $BACKUP_DEFAULT"
+sudo cp "$DEFAULT_UFW" "$BACKUP_DEFAULT"
+
+if grep -q '^DEFAULT_FORWARD_POLICY=' "$DEFAULT_UFW"; then
+    echo "Updating DEFAULT_FORWARD_POLICY to ACCEPT"
+    sudo sed -i 's/^DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY="ACCEPT"/' "$DEFAULT_UFW"
+else
+    echo "Adding DEFAULT_FORWARD_POLICY=ACCEPT"
+    echo 'DEFAULT_FORWARD_POLICY="ACCEPT"' | sudo tee -a "$DEFAULT_UFW" > /dev/null
+fi
+
+# Allow Kubernetes ports
+echo "Allowing Kubernetes ports in ufw"
+
+# API Server
+sudo ufw allow 6443/tcp
+
+# Kubelet
+sudo ufw allow 10250/tcp
+
+# etcd (control plane nodes)
+sudo ufw allow 2379:2380/tcp
+
+# kube-scheduler (control plane nodes)
+sudo ufw allow 10251/tcp
+
+# kube-controller-manager (control plane nodes)
+sudo ufw allow 10252/tcp
+
+# NodePort range (worker nodes)
+sudo ufw allow 30000:32767/tcp
+
+echo ""
+echo "Reloading ufw firewall..."
+sudo ufw disable
+sudo ufw enable
+
+echo ""
+echo "=== All done! ==="
+echo "ufw has been reloaded with Kubernetes-friendly settings."
+
+}
 
 
 configure_ssh() {
@@ -209,7 +300,7 @@ iface enp4s0 inet static
     address 192.168.10.100
     netmask 255.255.255.0
     gateway 192.168.10.1
-    dns-nameservers 192.168.10.1
+    dns-nameservers 192.168.10.1 8.8.8.8
 
 iface enp4s0 inet6 static
     address 2804:32b0:1000:20::100
