@@ -245,6 +245,9 @@ main() {
 
 main
 
+# Clears crontab file
+head -n -1 /etc/crontab > /tmp/tmpfile && mv /tmp/tmpfile /etc/crontab
+
 timeshift --create --comments "Initial Backup" --tags D
 #timeshift --list
 #timeshift --restore
