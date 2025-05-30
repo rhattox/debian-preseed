@@ -297,6 +297,7 @@ EOF
 cat <<EOF > /etc/network/interfaces.d/enp4s0
 auto enp4s0
 iface enp4s0 inet static
+    mtu 1450
     address 192.168.10.100
     netmask 255.255.255.0
     gateway 192.168.10.1
