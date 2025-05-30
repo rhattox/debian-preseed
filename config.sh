@@ -90,9 +90,10 @@ configure_ssh() {
     
     echo "[+] Allow port 3389 UFW..."
     ufw allow from "$IPV6_RANGE_1" to any port 3389 proto tcp
+    echo "[+] Allowing port 3389 from specific IPv6 range 1..."
     ufw allow from "$IPV4_RANGE" to any port 3389 proto tcp
 
-    echo "[+] Allowing SSH from specific IPv6 range 2..."
+    echo "[+] Allowing port 3389 from specific IPv6 range 2..."
     ufw allow from "$IPV6_RANGE_2" to any port 3389 proto tcp
     
     # echo "[+] Allowing SSH from specific IPv6 range 3..."
@@ -112,6 +113,9 @@ configure_ssh() {
     
     echo "[+] Denying all other SSH access..."
     ufw deny in to any port 22 proto tcp
+    
+    echo "[+] Denying all other RDP access..."
+    ufw deny in to any port 3389 proto tcp
     
     echo "[+] Enabled systemctl nginx"
     systemctl enable nginx
@@ -205,7 +209,7 @@ iface enp4s0 inet static
     address 192.168.10.100
     netmask 255.255.255.0
     gateway 192.168.10.1
-    dns-nameservers 192.168.10.1 1.1.1.1 8.8.8.8
+    dns-nameservers 192.168.10.1
 
 iface enp4s0 inet6 static
     address 2804:32b0:1000:20::100
