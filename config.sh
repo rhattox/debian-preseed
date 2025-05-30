@@ -7,6 +7,40 @@ IPV6_RANGE_2="2804:d41:ecdc:3c00::/64"
 IPV4_RANGE="192.168.10.0/24"
 USERNAME="dev"
 
+insert_before_filter() {
+  local file="$1"
+  local marker="*filter"
+  local tmpfile=$(mktemp)
+
+  awk -v block="$2" -v marker="$marker" '
+  $0 == marker {
+    print block
+  }
+  { print }
+  ' "$file" > "$tmpfile"
+
+  sudo cp "$tmpfile" "$file"
+  rm "$tmpfile"
+}
+
+insert_before_commit() {
+  local file="$1"
+  local block="$2"
+  local tmpfile=$(mktemp)
+
+  awk -v block="$block" '
+  BEGIN { in_filter=0 }
+  /^\*filter/ { in_filter=1 }
+  /^COMMIT/ && in_filter {
+    print block
+  }
+  { print }
+  ' "$file" > "$tmpfile"
+
+  sudo cp "$tmpfile" "$file"
+  rm "$tmpfile"
+}
+
 configure_fail2ban() {
     
     systemctl enable fail2ban
@@ -78,7 +112,7 @@ BACKUP_DEFAULT="${DEFAULT_UFW}.bak.$(date +%F_%T)"
 echo "Backing up $BEFORE_RULES to $BACKUP_BEFORE"
 sudo cp "$BEFORE_RULES" "$BACKUP_BEFORE"
 
-RAW_BLOCK=$(cat <<'EOF'
+RAW_BLOCK='
 # Allow Kubernetes internal interfaces: cni0, flannel.1
 *raw
 :PREROUTING ACCEPT [0:0]
@@ -88,31 +122,26 @@ RAW_BLOCK=$(cat <<'EOF'
 -A OUTPUT -o cni0 -j ACCEPT
 -A OUTPUT -o flannel.1 -j ACCEPT
 COMMIT
-EOF
-)
+'
 
-FILTER_BLOCK=$(cat <<'EOF'
+FILTER_BLOCK='
 # Allow traffic on internal interfaces
 -A ufw-before-input -i cni0 -j ACCEPT
 -A ufw-before-input -i flannel.1 -j ACCEPT
 -A ufw-before-output -o cni0 -j ACCEPT
 -A ufw-before-output -o flannel.1 -j ACCEPT
-EOF
-)
+'
 
-# Modify before.rules
 if ! grep -q "Allow Kubernetes internal interfaces: cni0, flannel.1" "$BEFORE_RULES"; then
     echo "Inserting raw rules block before *filter section"
-    sudo sed -i "/^\*filter/i $RAW_BLOCK\n" "$BEFORE_RULES"
+    insert_before_filter "$BEFORE_RULES" "$RAW_BLOCK"
 else
     echo "Raw block already present, skipping insertion."
 fi
 
 if ! grep -q "Allow traffic on internal interfaces" "$BEFORE_RULES"; then
-    echo "Appending filter rules block at the end of *filter section"
-    sudo sed -i "/^\*filter/,/COMMIT/{
-        /COMMIT/i $FILTER_BLOCK
-    }" "$BEFORE_RULES"
+    echo "Appending filter rules block before COMMIT in *filter section"
+    insert_before_commit "$BEFORE_RULES" "$FILTER_BLOCK"
 else
     echo "Filter block already present, skipping insertion."
 fi
