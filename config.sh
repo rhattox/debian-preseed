@@ -336,6 +336,7 @@ main() {
     configure_sudoers
     configure_ssh
     configure_fail2ban
+    configure_ip_k8s
 }
 
 
