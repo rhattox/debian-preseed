@@ -1,8 +1,12 @@
 #!/bin/bash
+# 🛠️ Script for configuring user environment and services
+# 🔒 Enables strict mode for better error handling
 set -xeu
 
+# 🖥️ Configure Remote Desktop Protocol (XRDP) service
 configure_xrdp() {
-    echo "-- Configuring RDP" 
+    echo "🖥️ Setting up Remote Desktop Protocol (XRDP)..."
+    echo "🔧 Configuring RDP service..." 
     systemctl enable xrdp
     
     echo gnome-session | tee /home/${USER}/.xsession
@@ -18,23 +22,30 @@ chmod +x /etc/xrdp/startwm.sh
 }
 
 
+# 👑 Setup sudo privileges for the user
 configure_sudoers() {
-    echo "-- Configuring SUDOERS"
+    echo "🔑 Setting up sudo privileges..."
+    echo "👤 Configuring SUDOERS for user ${USER}..."
     echo "${USER} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USER}
     chmod 0440 /etc/sudoers.d/${USER}
 }
 
+# 🎨 Configure GNOME desktop environment settings
 configure_gnome() {
-    echo "-- Configuring GNOME"
+    echo "🎨 Configuring GNOME desktop environment..."
+    echo "⚙️ Setting power management options..."
     # systemctl disable gdm
     # systemctl set-default multi-user.target   
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type nothing
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type nothing
+    systemctl set-default multi-user.target
 }
 
 
+# 🔑 Setup SSH public keys for remote access
 configure_public_key() {
-    echo "-- Configuring Public Key" 
+    echo "🔐 Setting up SSH access..."
+    echo "🔑 Configuring authorized SSH keys..." 
     local user_ssh_home_folder="${USER_HOME_FOLDER}/.ssh"
     local authorized_keys_path="${user_ssh_home_folder}/authorized_keys"
     
@@ -46,8 +57,10 @@ configure_public_key() {
 }
 
 
+# 🗑️ Remove default home directories
 delete_std_folders(){
-    echo "-- Configuring STD Folders" 
+    echo "🗑️ Cleaning up standard folders..."
+    echo "📂 Removing default home directories..." 
     local standard_home_folders=( 
         "Desktop"
         "Documents"

@@ -1,6 +1,10 @@
 #!/bin/bash
+# 🔍 Network information detection script
+# 🔒 Enable strict mode for better error handling
 set -xeu
-# Get default network interface
+
+echo "🔍 Starting network detection..."
+# 🌐 Get default network interface
 DEFAULT_IFACE=$(ip route | awk '/default/ {print $5}')
 
 # Get full CIDR (e.g., 192.168.1.100/24)

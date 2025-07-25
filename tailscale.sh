@@ -1,9 +1,12 @@
 #!/bin/bash
-
+# 🔗 Tailscale VPN installation and configuration script
+# 🔒 Enable strict mode for better error handling
 set -xeu
 
+# 📦 Install and configure Tailscale VPN
 install_tailscale(){
-    echo "🔧 Installing dependencies..."
+    echo "� Starting Tailscale installation..."
+    echo "�🔧 Installing dependencies..."
     apt-get update -y
     apt-get install -y curl gnupg lsb-release
     

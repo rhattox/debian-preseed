@@ -1,14 +1,18 @@
 #!/bin/bash
+# 🎯 Main configuration script for Debian Preseed setup
+# 🔒 Enable strict mode for better error handling
 set -xeu
+
+echo "🚀 Starting Debian Preseed Configuration Script..."
 
 USER=$(whoami)
 
 if [[ "${USER}" != "root" ]]
 then
-    echo "This will be executed for: ${USER}"
+    echo "👤 This will be executed for: ${USER}"
 else
     USER=${SUDO_USER}
-    echo "This will be executed for: ${USER}"
+    echo "👤 This will be executed for: ${USER}"
 fi
 
 USER_HOME_FOLDER="/home/${USER}"
@@ -18,11 +22,12 @@ source ./systemctl.sh
 source ./tailscale.sh
 source ./get_base_network_info.sh
 
-# Output
-echo "Interface: $DEFAULT_IFACE"
-echo "Full CIDR: $FULL_CIDR"
-echo "Network CIDR: $NETWORK_CIDR"
-echo "BASE_NET: $BASE_NET"
+# Output Network Information
+echo "🌐 Network Configuration Details:"
+echo "🔌 Interface: $DEFAULT_IFACE"
+echo "🌍 Full CIDR: $FULL_CIDR"
+echo "🔗 Network CIDR: $NETWORK_CIDR"
+echo "💻 Base Network: $BASE_NET"
 
 IPV4_VALUE="${BASE_NET}.100"
 IPV4_GATEWAY="${BASE_NET}.1"
