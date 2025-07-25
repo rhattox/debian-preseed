@@ -14,7 +14,8 @@ fi
 USER_HOME_FOLDER="/home/${USER}"
 
 source ./user.sh
-
+source ./systemctl.sh
+source ./tailscale.sh
 source ./get_base_network_info.sh
 
 # Output
@@ -27,8 +28,6 @@ IPV4_VALUE="${BASE_NET}.100"
 IPV4_GATEWAY="${BASE_NET}.1"
 IPV4_NETMASK="255.255.255.0"
 
-IPV6_TARGET_VALUE="2804:32b0:1000:20::/64"
-IPV6_VALUE="2804:d41::/32"
 source ./networking.sh
 
 # Clears crontab file
