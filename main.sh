@@ -30,11 +30,11 @@ IPV4_NETMASK="255.255.255.0"
 
 source ./networking.sh
 
-# Clears crontab file
-sed -i '/@reboot/d' /etc/crontab
+# # Clears crontab file
+# sed -i '/@reboot/d' /etc/crontab
 
-timeshift --create --comments "Initial Backup" --tags D
-#timeshift --list
-#timeshift --restore
+# timeshift --create --comments "Initial Backup" --tags D
+# #timeshift --list
+# #timeshift --restore
 
-reboot
+# reboot

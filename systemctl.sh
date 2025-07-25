@@ -9,7 +9,7 @@ auto_shutdown(){
     echo "Creating systemd service to shutdown after 8 hours..."
     
     # Create the service file
-cat > "${SERVICE_PATH}/${service_name}" <<EOF
+cat > "${SYSTEMCTL_PATH}/${service_name}" <<EOF
 [Unit]
 Description=Auto shutdown after 8 hours
 After=network.target
@@ -25,7 +25,7 @@ EOF
     # Reload systemd daemon and enable the service
     systemctl daemon-reexec
     systemctl daemon-reload
-    systemctl enable ${SERVICE_NAME}
+    systemctl enable ${service_name}
     
     echo "Auto-shutdown service installed and enabled. The system will shut down 8 hours after each boot."
     

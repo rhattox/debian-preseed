@@ -36,7 +36,7 @@ configure_gnome() {
 configure_public_key() {
     echo "-- Configuring Public Key" 
     local user_ssh_home_folder="${USER_HOME_FOLDER}/.ssh"
-    local authorized_keys_path="${authorized_keys_path}/authorized_keys"
+    local authorized_keys_path="${user_ssh_home_folder}/authorized_keys"
     
     mkdir -p ${user_ssh_home_folder}
     chown -R ${USER}:${USER} ${user_ssh_home_folder}
