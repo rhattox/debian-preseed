@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -xeu
 # Get default network interface
 DEFAULT_IFACE=$(ip route | awk '/default/ {print $5}')
 
