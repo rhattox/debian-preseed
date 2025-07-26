@@ -21,6 +21,7 @@ source ./user.sh
 source ./systemctl.sh
 source ./tailscale.sh
 source ./get_base_network_info.sh
+source ./virtualbox.sh 
 
 # Output Network Information
 echo "🌐 Network Configuration Details:"
