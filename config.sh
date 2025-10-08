@@ -15,3 +15,5 @@ bash /root/debian-developer/main.sh  > /root/${LOG_FILE} 2>&1
 # Cleanup
 
 sed -i '/@reboot root \/root\/config\.sh/d' /etc/crontab
+
+reboot
