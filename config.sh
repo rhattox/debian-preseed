@@ -10,7 +10,7 @@ chmod +x /root/debian-developer/main.sh
 TIMESTAMP=$(date +"%Y-%m-%d-%H-%M-%S")
 LOG_FILE="log-$TIMESTAMP.txt"
 
-bash /root/debian-developer/main.sh  > /root/${LOG_FILE} 2>&1
+bash /root/debian-developer/main.sh server > /root/${LOG_FILE} 2>&1
 
 # Cleanup
 
